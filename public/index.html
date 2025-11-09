@@ -5,40 +5,118 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Printing Services - Order</title>
   <style>
-    body{font-family: Arial, sans-serif;max-width:800px;margin:40px auto;padding:0 16px}
-    label{display:block;margin-top:12px}
-    input,textarea{width:100%;padding:8px;margin-top:6px}
-    button{margin-top:12px;padding:10px 16px}
-    .result{margin-top:16px;padding:12px;border:1px solid #eee;background:#fafafa}
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(120deg, #f7f8fa 0%, #e3e6ee 100%);
+      margin: 0;
+      min-height: 100vh;
+    }
+    .header {
+      background: #2d3e50;
+      color: #fff;
+      padding: 24px 0 16px 0;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+      margin-bottom: 32px;
+    }
+    .container {
+      max-width: 480px;
+      background: #fff;
+      margin: 0 auto 32px auto;
+      padding: 32px 24px 24px 24px;
+      border-radius: 12px;
+      box-shadow: 0 6px 24px rgba(44,62,80,0.10);
+    }
+    label {
+      display: block;
+      margin-top: 18px;
+      font-weight: 500;
+      color: #2d3e50;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #dbe2ea;
+      border-radius: 6px;
+      font-size: 1rem;
+      background: #f7f8fa;
+      transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus {
+      border-color: #2d3e50;
+      outline: none;
+    }
+    button {
+      margin-top: 18px;
+      padding: 12px 20px;
+      background: #2d3e50;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #1a2533;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 14px;
+      border: 1px solid #dbe2ea;
+      background: #f7f8fa;
+      border-radius: 6px;
+      color: #2d3e50;
+      font-size: 1rem;
+    }
+    .admin-link {
+      display: block;
+      text-align: right;
+      margin-top: 18px;
+      font-size: 1rem;
+    }
+    .admin-link a {
+      color: #2d3e50;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .admin-link a:hover {
+      color: #1a2533;
+      text-decoration: underline;
+    }
   </style>
- </head>
+</head>
 <body>
-  <h1>Printing Services — Order Form</h1>
-  <p>Use this form to send printing orders. After submitting, you'll get a short URL you can open anytime (e.g. http://yourserver/o/ABC123).</p>
-
-  <form id="orderForm">
-    <label>Name (required)
-      <input name="name" required />
-    </label>
-    <label>Email (required)
-      <input name="email" type="email" required />
-    </label>
-    <label>Phone
-      <input name="phone" />
-    </label>
-    <label>Order details (paper size, quantity, color, finish...) (required)
-      <textarea name="details" rows="6" required></textarea>
-    </label>
-    <label>Optional file (PDF, image)
-      <input name="file" type="file" />
-    </label>
-    <button type="submit">Send order</button>
-  </form>
-
-  <div id="result" class="result" style="display:none"></div>
-
-  <p><a href="/admin.html">Admin: View all orders</a></p>
-
+  <div class="header">
+    <h1>Printing Services</h1>
+    <div style="font-size:1.1rem;font-weight:400;opacity:0.85;">Order your prints online, fast and easy.</div>
+  </div>
+  <div class="container">
+    <form id="orderForm">
+      <label>Name (required)
+        <input name="name" required />
+      </label>
+      <label>Email (required)
+        <input name="email" type="email" required />
+      </label>
+      <label>Phone
+        <input name="phone" />
+      </label>
+      <label>Order details (paper size, quantity, color, finish...) (required)
+        <textarea name="details" rows="6" required></textarea>
+      </label>
+      <label>Optional file (PDF, image)
+        <input name="file" type="file" />
+      </label>
+      <button type="submit">Send order</button>
+    </form>
+    <div id="result" class="result" style="display:none"></div>
+    <div class="admin-link"><a href="/admin.html">View all orders</a> | <a href="/admin-login.html">Admin Login</a></div>
+  </div>
   <script>
     const form = document.getElementById('orderForm');
     const result = document.getElementById('result');
@@ -52,7 +130,7 @@
         if (!j.success) throw new Error(j.error || 'Unknown error');
         const url = window.location.origin + j.url;
         result.style.display = 'block';
-        result.innerHTML = `<strong>Order created.</strong><br/>Open it here: <a href="${url}" target="_blank">${url}</a><br/>Code: ${j.code} <button id="copyBtn">Copy link</button>`;
+        result.innerHTML = `<strong>Order created.</strong><br/>Open it here: <a href=\"${url}\" target=\"_blank\">${url}</a><br/>Code: ${j.code} <button id=\"copyBtn\">Copy link</button>`;
         document.getElementById('copyBtn').addEventListener('click', () => {
           navigator.clipboard.writeText(url).then(() => {
             alert('Link copied to clipboard');
