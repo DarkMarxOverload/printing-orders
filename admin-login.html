@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Login</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;background:#f7f8fa}
+    .card{background:#fff;padding:24px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.08);width:320px}
+    input{width:100%;padding:8px;margin-top:8px}
+    button{margin-top:12px;padding:10px 14px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Admin sign in</h2>
+    <form id="login">
+      <label>Username<input name="user" required></label>
+      <label>Password<input name="pass" type="password" required></label>
+      <button type="submit">Sign in</button>
+    </form>
+    <div id="err" style="color:red;margin-top:8px"></div>
+  </div>
+  <script>
+    document.getElementById('login').addEventListener('submit', async e=>{
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const body = { user: fd.get('user'), pass: fd.get('pass') };
+      const r = await fetch('/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      if (r.ok) location.href = '/admin.html';
+      else document.getElementById('err').innerText = 'Invalid credentials';
+    });
+  </script>
+</body>
+</html>

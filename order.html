@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Order details</title>
+  <style>body{font-family:Arial,Helvetica,sans-serif;max-width:900px;margin:24px auto;padding:0 16px}</style>
+</head>
+<body>
+  <h1>Order</h1>
+  <div id="content">Loading…</div>
+  <p><a href="/">Back to form</a></p>
+
+  <script>
+  async function load(){
+    const code = location.pathname.split('/').pop();
+    const res = await fetch('/api/orders/' + code);
+    if (res.status === 404) {
+      document.getElementById('content').innerText = 'Order not found';
+      return;
+    }
+    const order = await res.json();
+    const el = document.getElementById('content');
+    el.innerHTML = `
+      <p><strong>Code:</strong> ${order.code}</p>
+      <p><strong>Name:</strong> ${order.name}</p>
+      <p><strong>Email:</strong> ${order.email}</p>
+      <p><strong>Phone:</strong> ${order.phone || '-'} </p>
+      <p><strong>Details:</strong><pre style="white-space:pre-wrap">${order.details}</pre></p>
+      <p><strong>Created:</strong> ${new Date(order.createdAt).toLocaleString()}</p>
+    `;
+    if (order.file) {
+      const a = document.createElement('a');
+      a.href = '/uploads/' + order.file.filename;
+      a.innerText = 'Download attachment: ' + order.file.originalname;
+      a.target = '_blank';
+      el.appendChild(a);
+    }
+  }
+  load();
+  </script>
+</body>
+</html>
