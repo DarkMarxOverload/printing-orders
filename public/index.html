@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Printing Services - Order</title>
+  <style>
+    body{font-family: Arial, sans-serif;max-width:800px;margin:40px auto;padding:0 16px}
+    label{display:block;margin-top:12px}
+    input,textarea{width:100%;padding:8px;margin-top:6px}
+    button{margin-top:12px;padding:10px 16px}
+    .result{margin-top:16px;padding:12px;border:1px solid #eee;background:#fafafa}
+  </style>
+ </head>
+<body>
+  <h1>Printing Services — Order Form</h1>
+  <p>Use this form to send printing orders. After submitting, you'll get a short URL you can open anytime (e.g. http://yourserver/o/ABC123).</p>
+
+  <form id="orderForm">
+    <label>Name (required)
+      <input name="name" required />
+    </label>
+    <label>Email (required)
+      <input name="email" type="email" required />
+    </label>
+    <label>Phone
+      <input name="phone" />
+    </label>
+    <label>Order details (paper size, quantity, color, finish...) (required)
+      <textarea name="details" rows="6" required></textarea>
+    </label>
+    <label>Optional file (PDF, image)
+      <input name="file" type="file" />
+    </label>
+    <button type="submit">Send order</button>
+  </form>
+
+  <div id="result" class="result" style="display:none"></div>
+
+  <p><a href="/admin.html">Admin: View all orders</a></p>
+
+  <script>
+    const form = document.getElementById('orderForm');
+    const result = document.getElementById('result');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      result.style.display = 'none';
+      const fd = new FormData(form);
+      try {
+        const res = await fetch('/api/orders', { method: 'POST', body: fd });
+        const j = await res.json();
+        if (!j.success) throw new Error(j.error || 'Unknown error');
+        const url = window.location.origin + j.url;
+        result.style.display = 'block';
+        result.innerHTML = `<strong>Order created.</strong><br/>Open it here: <a href="${url}" target="_blank">${url}</a><br/>Code: ${j.code} <button id="copyBtn">Copy link</button>`;
+        document.getElementById('copyBtn').addEventListener('click', () => {
+          navigator.clipboard.writeText(url).then(() => {
+            alert('Link copied to clipboard');
+          }, () => alert('Could not copy'));
+        });
+        form.reset();
+      } catch (err) {
+        result.style.display = 'block';
+        result.innerHTML = '<strong>Error:</strong> ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
