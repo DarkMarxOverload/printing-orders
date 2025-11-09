@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - ADMIN_USER=admin
+      - ADMIN_PASS=password
+    volumes:
+      - ./data:/usr/src/app/data
+      - ./uploads:/usr/src/app/uploads
+    restart: unless-stopped

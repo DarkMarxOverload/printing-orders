@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: printing-orders
+    env: docker
+    plan: free
+    repo: <replace-with-your-github-repo>
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: ADMIN_USER
+        value: admin
+      - key: ADMIN_PASS
+        value: password
